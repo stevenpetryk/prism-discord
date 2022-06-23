@@ -29,16 +29,6 @@ export function DiscordPreview() {
   }, [hexScales])
 
   return (
-    <Box
-      as="iframe"
-      ref={iframeRef}
-      width={1}
-      height="100%"
-      src="http://localhost:3333"
-      allow="*"
-      sandbox=""
-      title="Discord"
-      border="0"
-    />
+    <Box as="iframe" ref={iframeRef} width={1} height="100%" src="http://localhost:3333" title="Discord" border="0" />
   )
 }
