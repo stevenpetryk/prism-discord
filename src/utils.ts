@@ -2,6 +2,7 @@ import {Color, Curve, Palette, Scale} from './types'
 import hsluv from 'hsluv'
 import {toHex} from 'color2k'
 import {camelCase} from 'lodash-es'
+import {GLOBAL_STATE_KEY} from './global-state'
 
 export function hexToColor(hex: string): Color {
   const [hue, saturation, lightness] = hsluv.hexToHsluv(toHex(hex)).map(value => Math.round(value * 100) / 100)
@@ -69,4 +70,24 @@ export function getHexScales(palette: Palette) {
 
 export function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t
+}
+
+export function createAndDownloadBackup() {
+  const backup = localStorage[GLOBAL_STATE_KEY]
+
+  // Date formatted as YYYY-MM-DD-HH-MM-SS
+  const date = new Date()
+    .toISOString()
+    .replace(/\.\d{3}Z$/, '')
+    .replace(/_/g, '-')
+
+  const blob = new Blob([backup], {type: 'application/json'})
+  const url = URL.createObjectURL(blob)
+
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `prism-backup-${date}.json`
+  link.click()
+
+  URL.revokeObjectURL(url)
 }
