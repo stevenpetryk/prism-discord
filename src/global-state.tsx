@@ -150,7 +150,6 @@ type MachineEvent =
   | {type: 'UNDO'}
   | {type: 'REDO'}
 
-// prettier-ignore
 const machine = Machine<MachineContext, MachineEvent>({
   id: 'global-state',
   context: {
@@ -202,6 +201,7 @@ const machine = Machine<MachineContext, MachineEvent>({
             '123': {
               id: '123',
               name: 'Default',
+              // prettier-ignore
               names: [
                 '100', '130', '160', '200', '230', '260', '300', '330', '345', '360', '400', '430', '460',
                 '500', '530', '560', '600', '630', '660', '700', '730', '760', '800', '830', '860', '900'
@@ -477,7 +477,6 @@ const machine = Machine<MachineContext, MachineEvent>({
   },
   states: {
     idle: {
-      entry: ['postComputedPaletteToParent'],
       exit: assign((context, event) => {
         // Insert present state at the end of the past
         context.past.push(context.palettes)
@@ -498,22 +497,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }
     }
   }
-},
-  {
-    actions: {
-      postComputedPaletteToParent: context => {
-        const payload = Object.fromEntries(
-          Object.entries(context.palettes).map(([id, palette]) => [
-            id,
-            {name: palette.name, scales: getHexScales(palette)}
-          ])
-        )
-
-        window.parent.postMessage(payload, '*')
-      }
-    }
-  }
-)
+})
 
 const GlobalStateContext = React.createContext(interpret(machine))
 
